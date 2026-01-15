@@ -10,7 +10,7 @@ defmodule HuddleService.Application do
       # MongoDB connection
       {Mongo, [
         name: :mongo,
-        url: System.get_env("MONGODB_URL", "mongodb://localhost:27017/quckchat_huddles"),
+        url: System.get_env("MONGODB_URL", "mongodb://localhost:27017/quckapp_huddles"),
         pool_size: 10
       ]},
       # Redis connection
