@@ -6,6 +6,9 @@ defmodule HuddleService.Application do
 
   @impl true
   def start(_type, _args) do
+    # Initialize circuit breakers
+    HuddleService.CircuitBreaker.init()
+
     children = [
       # MongoDB connection
       {Mongo, [
@@ -17,7 +20,8 @@ defmodule HuddleService.Application do
       {Redix, [
         name: :redix,
         host: System.get_env("REDIS_HOST", "localhost"),
-        port: String.to_integer(System.get_env("REDIS_PORT", "6379"))
+        port: String.to_integer(System.get_env("REDIS_PORT", "6379")),
+        password: System.get_env("REDIS_PASSWORD")
       ]},
       # PubSub for Phoenix Channels
       {Phoenix.PubSub, name: HuddleService.PubSub},
@@ -25,8 +29,9 @@ defmodule HuddleService.Application do
       {Registry, keys: :unique, name: HuddleService.HuddleRegistry},
       # Huddle Supervisor
       {DynamicSupervisor, name: HuddleService.HuddleSupervisor, strategy: :one_for_one},
-      # Kafka Producer
+      # Kafka Producer & Consumer
       HuddleService.Kafka.Producer,
+      HuddleService.Kafka.Consumer,
       # HTTP Endpoint
       {Plug.Cowboy, scheme: :http, plug: HuddleService.Router, options: [port: port()]}
     ]

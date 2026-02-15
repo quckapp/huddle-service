@@ -4,10 +4,16 @@ defmodule HuddleService.Router do
   """
   use Plug.Router
 
+  plug CORSPlug, origin: ["*"], methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
   plug Plug.Logger
+  plug HuddleService.SwaggerPlug
   plug :match
   plug Plug.Parsers, parsers: [:json], json_decoder: Jason
   plug :dispatch
+
+  # Swagger/OpenAPI documentation endpoints are handled by SwaggerPlug
+  # - GET /swagger - Swagger UI
+  # - GET /api/openapi - OpenAPI JSON specification
 
   # Health endpoints
   get "/health" do
