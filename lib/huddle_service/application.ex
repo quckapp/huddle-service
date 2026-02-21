@@ -14,11 +14,15 @@ defmodule HuddleService.Application do
         pool_size: 10
       ]},
       # Redis connection
-      {Redix, [
-        name: :redix,
-        host: System.get_env("REDIS_HOST", "localhost"),
-        port: String.to_integer(System.get_env("REDIS_PORT", "6379"))
-      ]},
+      {Redix,
+        [
+          name: :redix,
+          host: System.get_env("REDIS_HOST", "localhost"),
+          port: String.to_integer(System.get_env("REDIS_PORT", "6379"))
+        ] ++ if(System.get_env("REDIS_PASSWORD"),
+          do: [password: System.get_env("REDIS_PASSWORD")],
+          else: []
+        )},
       # PubSub for Phoenix Channels
       {Phoenix.PubSub, name: HuddleService.PubSub},
       # Huddle Registry
