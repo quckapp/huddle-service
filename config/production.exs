@@ -1,0 +1,51 @@
+# =============================================================================
+# PRODUCTION Environment Configuration
+# =============================================================================
+# Use this profile for production environment
+# Run with: MIX_ENV=production mix phx.server
+# =============================================================================
+
+import Config
+
+config :huddle_service, HuddleService.Endpoint,
+  http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}, port: String.to_integer(System.get_env("PORT") || "4005")],
+  url: [host: System.get_env("PHX_HOST") || "localhost", port: 443, scheme: "https"],
+  secret_key_base: System.get_env("SECRET_KEY_BASE") || raise("SECRET_KEY_BASE missing"),
+  server: true,
+  cache_static_manifest: "priv/static/cache_manifest.json"
+
+# MongoDB - Production (high pool size)
+config :huddle_service, :mongodb,
+  url: System.get_env("MONGODB_URI") || raise("MONGODB_URI missing"),
+  pool_size: String.to_integer(System.get_env("MONGODB_POOL_SIZE") || "50"),
+  timeout: 15_000,
+  connect_timeout: 10_000
+
+# Redis - Production
+config :huddle_service, :redis,
+  host: System.get_env("REDIS_HOST") || raise("REDIS_HOST missing"),
+  port: String.to_integer(System.get_env("REDIS_PORT") || "6379"),
+  password: System.get_env("REDIS_PASSWORD"),
+  database: String.to_integer(System.get_env("REDIS_DATABASE") || "5"),
+  pool_size: 32,
+  ssl: System.get_env("REDIS_SSL") == "true"
+
+# Kafka - Production
+config :huddle_service, :kafka,
+  brokers: String.split(System.get_env("KAFKA_BROKERS") || "localhost:9092", ","),
+  consumer_group: "huddle-service-production",
+  ssl: System.get_env("KAFKA_SSL") == "true"
+
+# JWT
+config :huddle_service, HuddleService.Guardian,
+  issuer: "quckapp-auth",
+  secret_key: System.get_env("JWT_SECRET") || raise("JWT_SECRET missing")
+
+# Services
+config :huddle_service, :services,
+  auth_service_url: System.get_env("AUTH_SERVICE_URL") || raise("AUTH_SERVICE_URL missing"),
+  user_service_url: System.get_env("USER_SERVICE_URL") || raise("USER_SERVICE_URL missing"),
+  channel_service_url: System.get_env("CHANNEL_SERVICE_URL") || raise("CHANNEL_SERVICE_URL missing")
+
+# Logging - Warn level for production
+config :logger, level: :warn

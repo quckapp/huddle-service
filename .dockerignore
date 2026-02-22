@@ -1,0 +1,51 @@
+# Git
+.git
+.gitignore
+
+# Build artifacts
+_build/
+deps/
+*.ez
+
+# Generated on crash by the VM
+erl_crash.dump
+
+# Static artifacts
+node_modules/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test artifacts
+cover/
+/tmp
+test/
+
+# Documentation
+doc/
+*.md
+!README.md
+
+# Docker files (not needed in container)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Elixir LS
+.elixir_ls/
+
+# Release artifacts (we build fresh)
+/rel/
+
+# Dialyzer
+/priv/plts/

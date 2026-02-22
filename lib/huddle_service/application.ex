@@ -6,6 +6,9 @@ defmodule HuddleService.Application do
 
   @impl true
   def start(_type, _args) do
+    # Initialize circuit breakers
+    HuddleService.CircuitBreaker.init()
+
     children = [
       # MongoDB connection
       {Mongo, [
@@ -29,8 +32,9 @@ defmodule HuddleService.Application do
       {Registry, keys: :unique, name: HuddleService.HuddleRegistry},
       # Huddle Supervisor
       {DynamicSupervisor, name: HuddleService.HuddleSupervisor, strategy: :one_for_one},
-      # Kafka Producer
+      # Kafka Producer & Consumer
       HuddleService.Kafka.Producer,
+      HuddleService.Kafka.Consumer,
       # HTTP Endpoint
       {Plug.Cowboy, scheme: :http, plug: HuddleService.Router, options: [port: port()]}
     ]
