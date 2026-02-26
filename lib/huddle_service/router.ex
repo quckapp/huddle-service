@@ -13,7 +13,7 @@ defmodule HuddleService.Router do
 
   # Swagger/OpenAPI documentation endpoints are handled by SwaggerPlug
   # - GET /swagger - Swagger UI
-  # - GET /api/openapi - OpenAPI JSON specification
+  # - GET /api/v1/openapi - OpenAPI JSON specification
 
   # Health endpoints
   get "/health" do

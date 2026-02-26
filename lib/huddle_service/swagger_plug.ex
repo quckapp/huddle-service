@@ -4,7 +4,7 @@ defmodule HuddleService.SwaggerPlug do
 
   This plug provides:
   - GET /swagger - Swagger UI HTML interface
-  - GET /api/openapi - OpenAPI JSON specification
+  - GET /api/v1/openapi - OpenAPI JSON specification
   """
   import Plug.Conn
 
@@ -77,7 +77,7 @@ defmodule HuddleService.SwaggerPlug do
       <script>
         window.onload = function() {
           const ui = SwaggerUIBundle({
-            url: "/api/openapi",
+            url: "/api/v1/openapi",
             dom_id: '#swagger-ui',
             deepLinking: true,
             presets: [
